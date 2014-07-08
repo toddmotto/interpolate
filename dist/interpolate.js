@@ -23,6 +23,12 @@
   }
 
   /**
+   * Regular expression to match delimeters in templates
+   * @type {RegExp}
+   */
+  Interpolate.reDelimeters = /{{([a-zA-Z0-9\.-_]+)}}/g;
+
+  /**
    * @name Interpolate#parse
    * @desc Parses an Object's values against the stored String template
    * @returns {String} Parsed template
@@ -30,13 +36,9 @@
   Interpolate.prototype.parse = function (obj) {
     if (getType(obj) !== 'Object') return;
     var temp = this.template;
-    for (var prop in obj) {
-      var regexp = new RegExp('{{' + prop + '}}', 'g');
-      if (regexp.test(temp)) {
-        temp = temp.replace(regexp, obj[prop]);
-      }
-    }
-    return temp;
+    return temp.replace(Interpolate.reDelimeters, function(str, path) {
+      return followPath(obj, path);
+    });
   };
 
   /**
@@ -58,6 +60,23 @@
    */
   function strip (tmpl) {
     return tmpl.replace(/\s(?![^}}]*\{\{)/g, '');
+  }
+
+  /**
+   * follows a path on the given data to retrieve a value
+   *
+   * @example
+   * var data = { foo : { bar : "abc" } };
+   * followPath(data, "foo.bar"); // "abc"
+   * 
+   * @param  {Object} data the object to get a value from
+   * @param  {String} path a path to a value on the data object
+   * @return the value of following the path on the data object
+   */
+  function followPath(data, path) {
+    return path.split('.').reduce(function(prev, curr) {
+      return prev && prev[curr];
+    }, data);
   }
 
   return function (tmpl) {
