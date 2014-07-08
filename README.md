@@ -52,6 +52,25 @@ for (var i = 0; i < data.length; i++) {
 }
 ```
 
+Support for deep Object properties is also there:
+
+```javascript
+var template = [
+  '<span>',
+    '{{ favourite.language }}',
+  '</span>'
+].join('');
+
+var data = {
+  favourite: {
+    language: 'JavaScript'
+  }
+}
+
+var render = interpolate(template);
+console.log(render(data)); // <span>JavaScript</span>
+```
+
 ## Installing with Bower
 
 ```
@@ -76,5 +95,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release history
 
+- 1.1.0
+  - Add support for deep Object properties
 - 1.0.0
   - Initial release
