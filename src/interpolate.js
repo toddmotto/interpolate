@@ -25,7 +25,7 @@
    * Regular expression to match delimeters in templates
    * @type {RegExp}
    */
-  Interpolate.reDelimeters = /{{([a-zA-Z0-9\.-_]+)}}/g;
+  Interpolate.reDelimeters = /{{(.+?)}}/g;
 
   /**
    * @name Interpolate#parse
@@ -36,7 +36,13 @@
     if (getType(obj) !== 'Object') return;
     var temp = this.template;
     return temp.replace(Interpolate.reDelimeters, function(str, path) {
-      return followPath(obj, path);
+      var prop = followPath(obj, path);
+      if(typeof prop === 'undefined') {
+        try { return new Function('obj', 'with(obj) { return ' + path + '; }').apply(obj, [obj]); }
+        catch(err) { console.error("'" + err.message + "'", " in \n\nCode:\n", code, "\n"); }
+      } else {
+        return prop;
+      }
     });
   };
 
