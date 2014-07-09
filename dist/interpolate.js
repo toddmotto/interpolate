@@ -1,4 +1,4 @@
-/*! interpolate.js v1.0.0 | (c) 2014 @toddmotto | https://github.com/toddmotto/interpolate */
+/*! interpolate.js v1.1.0 | (c) 2014 @toddmotto | https://github.com/toddmotto/interpolate */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     define(factory);
@@ -12,8 +12,7 @@
   'use strict';
 
   /**
-   * Interpolate
-   * @class
+   * @class Interpolate
    * @classdesc Interpolates a String against an Object's values
    * @param {String} tmpl Template to store for parsing
    */
@@ -23,10 +22,18 @@
   }
 
   /**
-   * Regular expression to match delimeters in templates
+   * @name Interpolate#getDelimiters
+   * @desc Match content between delimiters
    * @type {RegExp}
    */
-  Interpolate.reDelimeters = /{{(.+?)}}/g;
+  Interpolate.getDelimiters = /{{(.+?)}}/g;
+
+  /**
+   * @name Interpolate#stripDelimiters
+   * @desc Strips whitespace between delimiters
+   * @type {RegExp}
+   */
+  Interpolate.stripDelimiters = /\s(?![^}}]*\{\{)/g;
 
   /**
    * @name Interpolate#parse
@@ -36,7 +43,7 @@
   Interpolate.prototype.parse = function (obj) {
     if (getType(obj) !== 'Object') return;
     var temp = this.template;
-    return temp.replace(Interpolate.reDelimeters, function(str, path) {
+    return temp.replace(Interpolate.getDelimiters, function(str, path) {
       var prop = followPath(obj, path);
       if(typeof prop === 'undefined') {
         try { return new Function('obj', 'with(obj) { return ' + path + '; }').apply(obj, [obj]); }
@@ -60,40 +67,42 @@
 
   /**
    * @name strip
-   * @param {string} tmpl Template for removing whitespace between handlebars
-   * @private
+   * @param {String} tmpl Template for removing whitespace between handlebars
    * @returns {String}
+   * @private
    */
   function strip (tmpl) {
-    return tmpl.replace(/\s(?![^}}]*\{\{)/g, '');
+    return tmpl.replace(Interpolate.stripDelimiters, '');
   }
 
   /**
-   * reduce a collection to a single value.
-   * more generic implementation of ES5 Array.prototype.reduce
+   * @name reduce
+   * @desc Reduce a collection to a single value
+   * @returns {String}
    * @private
    */
-  function reduce(collection, iter, initial) {
-    for(var i = 0, length = collection.length; i < length; i++) {
+  function reduce (collection, iter, initial) {
+    for (var i = 0, length = collection.length; i < length; i++) {
       initial = iter.call(null, initial, collection[i], i, collection);
     }
     return initial;
   }
 
   /**
-   * follows a path on the given data to retrieve a value
+   * @name followPath
+   * @desc Follows a path on the given data to retrieve a value
    *
    * @example
    * var data = { foo : { bar : "abc" } };
-   * followPath(data, "foo.bar"); // "abc"
-   * 
-   * @param  {Object} data the object to get a value from
-   * @param  {String} path a path to a value on the data object
-   * @return the value of following the path on the data object
+   * followPath(data, 'foo.bar'); // 'abc'
+   *
+   * @param {Object} data the object to get a value from
+   * @param {String} path a path to a value on the data object
+   * @returns {*} the value of following the path on the data object
    * @private
    */
-  function followPath(data, path) {
-    return reduce(path.split('.'), function(prev, curr) {
+  function followPath (data, path) {
+    return reduce(path.split('.'), function (prev, curr) {
       return prev && prev[curr];
     }, data);
   }
