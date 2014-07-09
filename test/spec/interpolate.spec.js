@@ -40,4 +40,29 @@ describe('interpolate', function () {
     expect(render(data)).toMatch('JavaScript - AngularJS');
   });
 
+  it('should allow function call in the template', function() {
+    var render = interpolate('Author: {{ fullName() }}.');
+    var data = {
+      firstName: 'Todd',
+      lastName: 'Motto',
+      fullName: function() {
+        return this.firstName + ' ' + this.lastName;
+      }
+    }
+    expect(render(data)).toMatch('Author: Todd Motto.');
+  });
+
+  it('should allow complex javascript', function() {
+    var render = interpolate("Author: {{ age > 30 ? fullName() : fullName().toUpperCase() }}.");
+    var data = {
+      age: 23,
+      firstName: 'Todd',
+      lastName: 'Motto',
+      fullName: function() {
+        return this.firstName + ' ' + this.lastName;
+      }
+    }
+    expect(render(data)).toMatch('Author: TODD MOTTO.');
+  });
+
 });
