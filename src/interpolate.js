@@ -30,6 +30,7 @@
   /**
    * @name Interpolate#parse
    * @desc Parses an Object's values against the stored String template
+   * @throw {Error} If `path` can't be extracted from `obj`
    * @returns {String} Parsed template
    */
   Interpolate.prototype.parse = function (obj) {
@@ -38,8 +39,11 @@
     return temp.replace(Interpolate.getDelimiters, function(str, path) {
       var prop = followPath(obj, path);
       if(typeof prop === 'undefined') {
-        try { return new Function('obj', 'with(obj) { return ' + path + '; }').apply(obj, [obj]); }
-        catch(err) { console.error("'" + err.message + "'", " in \n\nCode:\n", code, "\n"); }
+        try {
+          return new Function('obj', 'with(obj) { return ' + path + '; }').apply(obj, [obj]); }
+        catch(err) {
+          throw new Error('Can\'t extract \''+path+'\' from supplied object.');
+        }
       } else {
         return prop;
       }
@@ -55,16 +59,6 @@
    */
   function getType (item) {
     return Object.prototype.toString.call(item).slice(8, -1);
-  }
-
-  /**
-   * @name strip
-   * @param {String} tmpl Template for removing whitespace between handlebars
-   * @returns {String}
-   * @private
-   */
-  function strip (tmpl) {
-    return tmpl.replace(Interpolate.stripDelimiters, '');
   }
 
   /**

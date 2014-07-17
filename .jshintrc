@@ -17,6 +17,7 @@
   "unused": false,
   "trailing": false,
   "sub": true,
+  "evil": true,
   "globals": {
     "define": true,
     "ga": true
