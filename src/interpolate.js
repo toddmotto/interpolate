@@ -17,7 +17,7 @@
    */
   function Interpolate (tmpl) {
     if (getType(tmpl) !== 'String') return;
-    this.template = strip(tmpl);
+    this.template = tmpl;
   }
 
   /**
@@ -25,14 +25,7 @@
    * @desc Match content between delimiters
    * @type {RegExp}
    */
-  Interpolate.getDelimiters = /{{(.+?)}}/g;
-
-  /**
-   * @name Interpolate#stripDelimiters
-   * @desc Strips whitespace between delimiters
-   * @type {RegExp}
-   */
-  Interpolate.stripDelimiters = /\s(?![^}}]*\{\{)/g;
+  Interpolate.getDelimiters = /{{\s*(.+?)\s*}}/g;
 
   /**
    * @name Interpolate#parse
