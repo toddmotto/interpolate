@@ -30,6 +30,7 @@
   /**
    * @name Interpolate#parse
    * @desc Parses an Object's values against the stored String template
+   * @throw {Error} If `path` can't be extracted from `obj`
    * @returns {String} Parsed template
    */
   Interpolate.prototype.parse = function (obj) {
