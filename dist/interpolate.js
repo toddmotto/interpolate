@@ -1,4 +1,4 @@
-/*! interpolate.js v1.1.0 | (c) 2014 @toddmotto | https://github.com/toddmotto/interpolate */
+/*! interpolate.js v1.1.1 | (c) 2014 @toddmotto | https://github.com/toddmotto/interpolate */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     define(factory);
@@ -18,7 +18,7 @@
    */
   function Interpolate (tmpl) {
     if (getType(tmpl) !== 'String') return;
-    this.template = strip(tmpl);
+    this.template = tmpl;
   }
 
   /**
@@ -26,14 +26,7 @@
    * @desc Match content between delimiters
    * @type {RegExp}
    */
-  Interpolate.getDelimiters = /{{(.+?)}}/g;
-
-  /**
-   * @name Interpolate#stripDelimiters
-   * @desc Strips whitespace between delimiters
-   * @type {RegExp}
-   */
-  Interpolate.stripDelimiters = /\s(?![^}}]*\{\{)/g;
+  Interpolate.getDelimiters = /{{\s*(.+?)\s*}}/g;
 
   /**
    * @name Interpolate#parse
