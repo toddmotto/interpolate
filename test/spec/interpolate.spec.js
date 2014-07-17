@@ -1,3 +1,5 @@
+/* globals describe, beforeEach, interpolate, it, expect */
+
 /**
  * interpolate.js
  */
@@ -20,8 +22,8 @@ describe('interpolate', function () {
     age: 23,
     location: 'United Kingdom',
     favourite : {
-      language : "JavaScript",
-      framework : "AngularJS"
+      language : 'JavaScript',
+      framework : 'AngularJS'
     }
   };
 
@@ -48,12 +50,12 @@ describe('interpolate', function () {
       fullName: function() {
         return this.firstName + ' ' + this.lastName;
       }
-    }
+    };
     expect(render(data)).toMatch('Author: Todd Motto.');
   });
 
   it('should allow complex javascript', function() {
-    var render = interpolate("Author: {{ age > 30 ? fullName() : fullName().toUpperCase() }}.");
+    var render = interpolate('Author: {{ age > 30 ? fullName() : fullName().toUpperCase() }}.');
     var data = {
       age: 23,
       firstName: 'Todd',
@@ -61,7 +63,7 @@ describe('interpolate', function () {
       fullName: function() {
         return this.firstName + ' ' + this.lastName;
       }
-    }
+    };
     expect(render(data)).toMatch('Author: TODD MOTTO.');
   });
 
