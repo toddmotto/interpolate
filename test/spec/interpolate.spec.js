@@ -42,11 +42,6 @@ describe('interpolate', function () {
     expect(render(data)).toMatch('JavaScript - AngularJS');
   });
 
-  it('should throw an error if `path` can\'t be extracted', function(){
-      var render = interpolate('{{ favourite["test"]["test"] }}');
-      expect(function(){ render(data); }).toThrow(new Error('Can\'t extract \'favourite["test"]["test"]\' from supplied object.'));
-  });
-
   it('should allow function call in the template', function() {
     var render = interpolate('Author: {{ fullName() }}.');
     var data = {
